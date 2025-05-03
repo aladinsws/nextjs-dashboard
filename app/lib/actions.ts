@@ -25,7 +25,7 @@ const FormSchema = z.object({
 
 export type State = {
     errors?: {
-        customerId?: string,
+        customerId?: string[],
         amount?: string[],
         status?: string[],
     };
@@ -114,7 +114,8 @@ export async function authenticate(
         await signIn('credentials', formData);
     } catch (error) {
         if (error instanceof AuthError) {
-            switch (error.type) {
+            const authError = error as AuthError & { type: string };
+            switch (authError.type) {
                 case 'CredentialsSignin':
                     return 'Invalid credentials';
                 default:
